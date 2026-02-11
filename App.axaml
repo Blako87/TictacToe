@@ -1,11 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="TicTacToeFancy.App"
-             xmlns:local="using:TicTacToeFancy"
              RequestedThemeVariant="Dark">
-  <Application.DataTemplates>
-    <local:ViewLocator/>
-  </Application.DataTemplates>
 
   <Application.Resources>
     <!-- Galactic Metal Palette -->
