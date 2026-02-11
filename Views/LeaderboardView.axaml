@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TicTacToeFancy.ViewModels"
+             x:Class="TicTacToeFancy.Views.LeaderboardView"
+             x:DataType="vm:LeaderboardViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="TextBlock.header">
+      <Setter Property="Foreground" Value="{StaticResource CyanBrush}"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="FontSize" Value="32"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="{StaticResource CyanNeon}" BlurRadius="20" Opacity="0.6"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="Border.stat-row">
+      <Setter Property="Background" Value="#10FFFFFF"/>
+      <Setter Property="BorderBrush" Value="#30FFFFFF"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="Padding" Value="12"/>
+      <Setter Property="CornerRadius" Value="4"/>
+    </Style>
+    
+    <Style Selector="Border.stat-row:nth-child(odd)">
+       <Setter Property="Background" Value="#08FFFFFF"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid Margin="24">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- Header -->
+    <StackPanel Grid.Row="0" Margin="0,0,0,24" Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+      <TextBlock Text="GALACTIC" Classes="header" Foreground="{StaticResource SilverChrome}"/>
+      <TextBlock Text="LEADERBOARD" Classes="header"/>
+    </StackPanel>
+
+    <!-- Stats List -->
+    <Border Grid.Row="1" Classes="glass-panel" Padding="20">
+      <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Table Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="PILOT" FontWeight="Bold" Foreground="#80FFFFFF" Grid.Column="0"/>
+            <TextBlock Text="WINS" FontWeight="Bold" Foreground="#8000F0FF" Grid.Column="1" HorizontalAlignment="Center"/>
+            <TextBlock Text="LOSSES" FontWeight="Bold" Foreground="#80FF0000" Grid.Column="2" HorizontalAlignment="Center"/>
+            <TextBlock Text="DRAWS" FontWeight="Bold" Foreground="#80FFFFFF" Grid.Column="3" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <!-- Scrollable List -->
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding Stats}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Classes="stat-row" Margin="0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="{StaticResource SilverChrome}" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Wins}" Foreground="{StaticResource CyanBrush}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"/>
+                        <TextBlock Text="{Binding Losses}" Foreground="#FF6B6B" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Draws}" Foreground="#AAAAAA" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3"/>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+      </Grid>
+    </Border>
+
+    <!-- Back Button -->
+    <Button Grid.Row="2" 
+            Classes="action-btn" 
+            Command="{Binding BackCommand}" 
+            Content="RETURN TO ARENA" 
+            HorizontalAlignment="Center" 
+            Margin="0,24,0,0"
+            Width="200"
+            HorizontalContentAlignment="Center"/>
+  </Grid>
+</UserControl>

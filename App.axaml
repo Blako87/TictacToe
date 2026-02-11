@@ -1,0 +1,85 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TicTacToeFancy.App"
+             xmlns:local="using:TicTacToeFancy"
+             RequestedThemeVariant="Dark">
+  <Application.DataTemplates>
+    <local:ViewLocator/>
+  </Application.DataTemplates>
+
+  <Application.Resources>
+    <!-- Galactic Metal Palette -->
+    <Color x:Key="CyanNeon">#00F0FF</Color>
+    <Color x:Key="CyanStrong">#00B8FF</Color>
+    <Color x:Key="VioletNeon">#BD00FF</Color>
+    <Color x:Key="VioletStrong">#8F00C7</Color>
+    <Color x:Key="SilverChrome">#E0E5FF</Color>
+    <Color x:Key="DarkMetal">#151922</Color>
+    
+    <Color x:Key="SurfaceSoft">#12FFFFFF</Color>
+    <Color x:Key="SurfaceBorder">#25FFFFFF</Color>
+
+    <SolidColorBrush x:Key="CyanBrush" Color="{StaticResource CyanNeon}"/>
+    <SolidColorBrush x:Key="VioletBrush" Color="{StaticResource VioletNeon}"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="{StaticResource SurfaceSoft}"/>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="{StaticResource SurfaceBorder}"/>
+
+    <!-- Deep Space Gradient -->
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#050510" Offset="0"/>
+      <GradientStop Color="#0D0D24" Offset="0.4"/>
+      <GradientStop Color="#140A28" Offset="0.8"/>
+      <GradientStop Color="#000000" Offset="1"/>
+    </LinearGradientBrush>
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{StaticResource BackgroundGradient}"/>
+      <Setter Property="Foreground" Value="#E0E5FF"/>
+      <Setter Property="FontFamily" Value="Segoe UI, Inter, Arial"/>
+    </Style>
+
+    <Style Selector="Border.glass-panel">
+      <Setter Property="Background" Value="#0AFFFFFF"/>
+      <Setter Property="CornerRadius" Value="12"/>
+      <Setter Property="BorderBrush" Value="#30FFFFFF"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="BoxShadow" Value="0 4 24 0 #40000000"/>
+    </Style>
+
+    <Style Selector="Button.action-btn">
+      <Setter Property="Height" Value="48"/>
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="CornerRadius" Value="6"/>
+      <Setter Property="Padding" Value="24,0"/>
+      <Setter Property="Background" Value="#15FFFFFF"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="BorderBrush" Value="#40FFFFFF"/>
+      <Setter Property="Foreground" Value="#E0E5FF"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.15"/>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="Button.action-btn:pointerover">
+      <Setter Property="Background" Value="#25FFFFFF"/>
+      <Setter Property="BorderBrush" Value="#8000F0FF"/>
+      <Setter Property="RenderTransform" Value="scale(1.02)"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#4000F0FF" BlurRadius="12" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+    
+    <Style Selector="Button.action-btn:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+  </Application.Styles>
+</Application>

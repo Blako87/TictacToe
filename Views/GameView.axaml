@@ -1,0 +1,397 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TicTacToeFancy.ViewModels"
+             xmlns:models="using:TicTacToeFancy.Models"
+             xmlns:conv="using:TicTacToeFancy.Converters"
+             x:Class="TicTacToeFancy.Views.GameView"
+             x:DataType="vm:MainWindowViewModel">
+
+  <UserControl.Styles>
+    <!-- ==================== TITLE ==================== -->
+    <Style Selector="TextBlock.title-main">
+      <Setter Property="FontSize" Value="52"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Foreground">
+        <Setter.Value>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Color="#E0E5FF" Offset="0"/>
+            <GradientStop Color="#00F0FF" Offset="0.5"/>
+            <GradientStop Color="#BD00FF" Offset="1"/>
+          </LinearGradientBrush>
+        </Setter.Value>
+      </Setter>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#00F0FF" BlurRadius="32" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="TextBlock.title-sub">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="LetterSpacing" Value="10"/>
+      <Setter Property="Opacity" Value="0.8"/>
+      <Setter Property="Foreground" Value="#8080A0"/>
+    </Style>
+
+    <!-- ==================== HUD CARDS ==================== -->
+    <Style Selector="Border.hud-card">
+      <Setter Property="CornerRadius" Value="18"/>
+      <Setter Property="BorderThickness" Value="1.5"/>
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.3"/>
+          <BrushTransition Property="Background" Duration="0:0:0.3"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="Border.hud-card-x">
+      <Setter Property="Background" Value="#1000F0FF"/>
+      <Setter Property="BorderBrush" Value="#6000F0FF"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#00F0FF" BlurRadius="14" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="Border.hud-card-o">
+      <Setter Property="Background" Value="#10BD00FF"/>
+      <Setter Property="BorderBrush" Value="#60BD00FF"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#BD00FF" BlurRadius="14" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <!-- ==================== GAME CELLS ==================== -->
+    <Style Selector="Button.game-cell">
+      <Setter Property="Width" Value="130"/>
+      <Setter Property="Height" Value="130"/>
+      <Setter Property="Margin" Value="7"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="FontSize" Value="58"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="BorderBrush" Value="#40E0E5FF"/>
+      <Setter Property="Background">
+        <Setter.Value>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#051015" Offset="0"/>
+            <GradientStop Color="#0A1520" Offset="1"/>
+          </LinearGradientBrush>
+        </Setter.Value>
+      </Setter>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.2"/>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16"/>
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <Style Selector="Button.game-cell:pointerover">
+      <Setter Property="BorderBrush" Value="#00F0FF"/>
+      <Setter Property="RenderTransform" Value="scale(1.05)"/>
+      <Setter Property="Background" Value="#152030"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#00F0FF" BlurRadius="20" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="Button.game-cell:pressed">
+      <Setter Property="RenderTransform" Value="scale(0.96)"/>
+      <Setter Property="BorderBrush" Value="#FFFFFF"/>
+    </Style>
+
+    <Style Selector="Button.game-cell.player-x">
+      <Setter Property="Foreground" Value="#00F0FF"/>
+      <Setter Property="TextBlock.Effect">
+        <DropShadowEffect Color="#00F0FF" BlurRadius="22" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="Button.game-cell.player-o">
+      <Setter Property="Foreground" Value="#BD00FF"/>
+      <Setter Property="TextBlock.Effect">
+        <DropShadowEffect Color="#BD00FF" BlurRadius="22" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="Button.game-cell.winner">
+      <Setter Property="BorderBrush" Value="#E0E5FF"/>
+      <Setter Property="RenderTransform" Value="scale(1.1)"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#E0E5FF" BlurRadius="34" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <!-- ==================== BACKGROUND PARTICLES ==================== -->
+    <Style Selector="Border.bg-particle">
+      <Setter Property="CornerRadius" Value="99"/>
+      <Setter Property="Background" Value="#4000F0FF"/>
+      <Setter Property="IsHitTestVisible" Value="False"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#00F0FF" BlurRadius="8" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <Style Selector="Border.bg-particle.amber">
+      <Setter Property="Background" Value="#40BD00FF"/>
+      <Setter Property="Effect">
+        <DropShadowEffect Color="#BD00FF" BlurRadius="8" OffsetX="0" OffsetY="0"/>
+      </Setter>
+    </Style>
+
+    <!-- ==================== DIFFICULTY BUTTONS ==================== -->
+    <Style Selector="Button.diff-btn">
+      <Setter Property="Height" Value="36"/>
+      <Setter Property="MinWidth" Value="100"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Foreground" Value="#8080A0"/>
+      <Setter Property="Padding" Value="12,0"/>
+    </Style>
+
+    <Style Selector="Button.diff-btn:pointerover">
+      <Setter Property="Foreground" Value="#FFFFFF"/>
+      <Setter Property="BorderBrush" Value="#FFFFFF"/>
+    </Style>
+
+    <Style Selector="Button.diff-easy.active">
+      <Setter Property="Background" Value="#2000FF00"/>
+      <Setter Property="BorderBrush" Value="#00FF00"/>
+      <Setter Property="Foreground" Value="#80FF80"/>
+    </Style>
+    <Style Selector="Button.diff-normal.active">
+      <Setter Property="Background" Value="#2000F0FF"/>
+      <Setter Property="BorderBrush" Value="#00F0FF"/>
+      <Setter Property="Foreground" Value="#80F0FF"/>
+    </Style>
+    <Style Selector="Button.diff-hard.active">
+      <Setter Property="Background" Value="#20BD00FF"/>
+      <Setter Property="BorderBrush" Value="#BD00FF"/>
+      <Setter Property="Foreground" Value="#E080FF"/>
+    </Style>
+
+     <!-- ==================== INPUT ==================== -->
+     <Style Selector="TextBox.player-input">
+         <Setter Property="Background" Value="#10FFFFFF"/>
+         <Setter Property="BorderBrush" Value="#30FFFFFF"/>
+         <Setter Property="Foreground" Value="#E0E5FF"/>
+         <Setter Property="CaretBrush" Value="#00F0FF"/>
+         <Setter Property="CornerRadius" Value="4"/>
+         <Setter Property="FontSize" Value="16"/>
+         <Setter Property="FontWeight" Value="SemiBold"/>
+         <Setter Property="MinWidth" Value="200"/>
+         <Setter Property="TextAlignment" Value="Center"/>
+     </Style>
+     <Style Selector="TextBox.player-input:focus">
+         <Setter Property="BorderBrush" Value="#00F0FF"/>
+         <Setter Property="Background" Value="#20FFFFFF"/>
+     </Style>
+  </UserControl.Styles>
+
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- ========== DRIFTING BACKGROUND PARTICLES ========== -->
+    <ItemsControl Grid.RowSpan="6" ItemsSource="{Binding BackgroundParticles}" IsHitTestVisible="False" Opacity="0.6">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Canvas/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="models:BackgroundParticle">
+          <Border Classes="bg-particle"
+                  Classes.amber="{Binding IsAmber}"
+                  Width="{Binding Size}"
+                  Height="{Binding Size}"
+                  Opacity="{Binding Opacity}"
+                  Canvas.Left="{Binding X}"
+                  Canvas.Top="{Binding Y}"/>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <!-- ========== HEADER ========== -->
+    <Border Grid.Row="0" Classes="glass-panel" Padding="28,22" Margin="0,0,0,10">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Title block -->
+        <StackPanel Grid.Column="0" Spacing="2">
+          <TextBlock Text="TIC TAC TOE" Classes="title-main"/>
+          <TextBlock Text="GALACTIC ARENA" Classes="title-sub"/>
+        </StackPanel>
+
+        <!-- Score HUD -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+          <Border Classes="hud-card hud-card-x" Padding="20,12">
+            <StackPanel>
+              <TextBlock Text="PILOT" HorizontalAlignment="Center" Foreground="#00F0FF" FontWeight="Bold" FontSize="14"/>
+              <TextBlock Text="{Binding ScoreX}" HorizontalAlignment="Center" FontSize="32" FontWeight="Bold" Foreground="White"/>
+            </StackPanel>
+          </Border>
+
+          <TextBlock Text="VS" VerticalAlignment="Center" Opacity="0.4" FontSize="16" FontWeight="Bold"/>
+
+          <Border Classes="hud-card hud-card-o" Padding="20,12">
+            <StackPanel>
+              <TextBlock Text="AI / CPU" HorizontalAlignment="Center" Foreground="#BD00FF" FontWeight="Bold" FontSize="14"/>
+              <TextBlock Text="{Binding ScoreO}" HorizontalAlignment="Center" FontSize="32" FontWeight="Bold" Foreground="White"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- ========== PLAYER INPUT ========== -->
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,14" Spacing="10">
+        <TextBlock Text="PILOT NAME ::" VerticalAlignment="Center" Foreground="#8080A0" LetterSpacing="2" FontSize="12"/>
+        <TextBox Classes="player-input" Text="{Binding PlayerName}" Watermark="ENTER NAME"/>
+    </StackPanel>
+
+    <!-- ========== STATUS BAR ========== -->
+    <Grid Grid.Row="2" Margin="0,0,0,10">
+      <Border Classes="glass-panel" CornerRadius="8" Padding="14,12" Background="#10000000">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+
+          <!-- Turn indicator -->
+          <Grid Grid.Column="0" Width="12" Height="12" Margin="6,0,14,0" VerticalAlignment="Center">
+            <Ellipse Width="8" Height="8" Fill="#00F0FF" IsVisible="{Binding IsPlayerXTurn}">
+              <Ellipse.Effect>
+                <DropShadowEffect Color="#00F0FF" BlurRadius="6"/>
+              </Ellipse.Effect>
+            </Ellipse>
+            <Ellipse Width="8" Height="8" Fill="#BD00FF" IsVisible="{Binding !IsPlayerXTurn}">
+               <Ellipse.Effect>
+                <DropShadowEffect Color="#BD00FF" BlurRadius="6"/>
+               </Ellipse.Effect>
+            </Ellipse>
+          </Grid>
+
+          <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="2" Foreground="#E0E5FF"/>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+             <Button Classes="diff-btn diff-easy" Classes.active="{Binding IsEasySelected}" Command="{Binding SelectEasyDifficultyCommand}" Content="EASY" IsEnabled="{Binding IsVsAI}"/>
+             <Button Classes="diff-btn diff-normal" Classes.active="{Binding IsNormalSelected}" Command="{Binding SelectNormalDifficultyCommand}" Content="NORMAL" IsEnabled="{Binding IsVsAI}"/>
+             <Button Classes="diff-btn diff-hard" Classes.active="{Binding IsHardSelected}" Command="{Binding SelectHardDifficultyCommand}" Content="HARD" IsEnabled="{Binding IsVsAI}"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <!-- ========== GAME BOARD ========== -->
+    <Grid Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Border Classes="glass-panel" Padding="22" x:Name="BoardPanel">
+        <Grid>
+          <!-- Cell grid -->
+          <ItemsControl ItemsSource="{Binding Cells}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Rows="3" Columns="3"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="models:GameCell">
+                <Border Opacity="{Binding IntroOpacity}">
+                  <Border.RenderTransform>
+                    <TransformGroup>
+                      <ScaleTransform ScaleX="{Binding IntroScale}" ScaleY="{Binding IntroScale}"/>
+                      <TranslateTransform Y="{Binding IntroTranslateY}"/>
+                    </TransformGroup>
+                  </Border.RenderTransform>
+
+                  <Button Classes="game-cell"
+                          Classes.player-x="{Binding IsPlayerX}"
+                          Classes.player-o="{Binding IsPlayerO}"
+                          Classes.winner="{Binding IsWinner}"
+                          Command="{Binding MoveCommand}"
+                          CommandParameter="{Binding}">
+                    <Grid>
+                      <!-- Idle ambient glow -->
+                      <Border IsHitTestVisible="False"
+                              CornerRadius="4"
+                              BorderThickness="1"
+                              BorderBrush="#20FFFFFF"
+                              Opacity="{Binding IdleGlow}"/>
+
+                      <!-- Impact flash -->
+                      <Border IsHitTestVisible="False"
+                              Background="#FFFFFFFF"
+                              Opacity="{Binding SparkFlashOpacity}"
+                              CornerRadius="4"/>
+
+                      <!-- PLASMA RINGS (Cosmic Effect) -->
+                      <Border IsHitTestVisible="False"
+                              Width="120" Height="120" CornerRadius="60"
+                              BorderThickness="2" BorderBrush="#00F0FF"
+                              Opacity="{Binding SparkRingOpacity}">
+                        <Border.RenderTransform>
+                          <ScaleTransform ScaleX="{Binding SparkRingScale}" ScaleY="{Binding SparkRingScale}"/>
+                        </Border.RenderTransform>
+                      </Border>
+                      
+                       <Border IsHitTestVisible="False"
+                              Width="100" Height="100" CornerRadius="50"
+                              BorderThickness="4" BorderBrush="#8000F0FF"
+                              Opacity="{Binding SparkRing2Opacity}">
+                        <Border.RenderTransform>
+                          <ScaleTransform ScaleX="{Binding SparkRing2Scale}" ScaleY="{Binding SparkRing2Scale}"/>
+                        </Border.RenderTransform>
+                      </Border>
+
+                      <Border IsHitTestVisible="False"
+                              Width="120" Height="120" CornerRadius="10"
+                              BorderThickness="3" BorderBrush="#BD00FF"
+                              Opacity="{Binding AiSparkOpacity}">
+                        <Border.RenderTransform>
+                          <ScaleTransform ScaleX="{Binding SparkScale}" ScaleY="{Binding SparkScale}"/>
+                        </Border.RenderTransform>
+                      </Border>
+
+                      <!-- Winner pulsing overlay -->
+                      <Border IsHitTestVisible="False"
+                              CornerRadius="4"
+                              Background="#20E0E5FF"
+                              Opacity="{Binding WinnerPulse}"/>
+
+                      <!-- Cell text -->
+                      <TextBlock Text="{Binding Value}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                  </Button>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <!-- ========== ACTION BAR ========== -->
+    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="14" Margin="0,20,0,4">
+      <Button Classes="action-btn" Command="{Binding NewGameCommand}" Content="NEW MATCH"/>
+      <Button Classes="action-btn" Command="{Binding ResetGameCommand}" Content="RESET BOARD"/>
+      <Button Classes="action-btn" Command="{Binding ShowLeaderboardCommand}" Content="LEADERBOARD" BorderBrush="#00F0FF" Foreground="#00F0FF"/>
+    </StackPanel>
+  </Grid>
+</UserControl>
