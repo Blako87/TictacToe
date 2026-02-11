@@ -3,10 +3,6 @@
              x:Class="TicTacToeFancy.App"
              xmlns:local="using:TicTacToeFancy"
              RequestedThemeVariant="Dark">
-  <Application.DataTemplates>
-    <local:ViewLocator/>
-  </Application.DataTemplates>
-
   <Application.Resources>
     <!-- Galactic Metal Palette -->
     <Color x:Key="CyanNeon">#00F0FF</Color>

@@ -10,12 +10,12 @@ using TicTacToeFancy.Services;
 
 namespace TicTacToeFancy.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase, IDisposable
+public partial class MainWindowViewModel : ViewModelBase, IDisposable, IGameNavigator
 {
     private const string HumanPlayer = "X";
     private const string AIPlayer = "O";
 
-    private readonly MinimaxAiService _aiMoveService = new();
+    private readonly MinimaxAiService _aiMoveService;
     private readonly DispatcherTimer _particleTimer;
     private double _particleTime;
     private const double ParticleFieldWidth = 980;
@@ -85,9 +85,10 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     public bool IsNormalSelected => SelectedDifficulty == AiDifficulty.Normal;
     public bool IsHardSelected => SelectedDifficulty == AiDifficulty.Hard;
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(DatabaseService dbService, MinimaxAiService aiMoveService, bool startAnimations = true)
     {
-        _dbService = new DatabaseService();
+        _dbService = dbService;
+        _aiMoveService = aiMoveService;
         LeaderboardVm = new LeaderboardViewModel(_dbService, this);
         _currentView = this; // Default to game view (self, or we can separate GameViewModel if we want, but keeping it simple for now)
 
@@ -99,9 +100,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         SeedBackgroundParticles();
         _particleTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _particleTimer.Tick += (_, _) => AnimateFrame();
-        _particleTimer.Start();
-
-        _ = PlayIntroSequenceAsync();
+        if (startAnimations)
+        {
+            _particleTimer.Start();
+            _ = PlayIntroSequenceAsync();
+        }
     }
 
     private async Task PlayIntroSequenceAsync()
@@ -137,6 +140,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
     private void AnimateFrame()
     {
+        if (CurrentView != this)
+        {
+            return;
+        }
+
         _particleTime += 0.066;
 
         // Background particles

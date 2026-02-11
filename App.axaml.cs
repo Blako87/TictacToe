@@ -4,6 +4,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using TicTacToeFancy.Services;
 using TicTacToeFancy.ViewModels;
 using TicTacToeFancy.Views;
 
@@ -23,9 +24,12 @@ public partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
+            var dbService = new DatabaseService();
+            var aiMoveService = new MinimaxAiService();
+            var mainViewModel = new MainWindowViewModel(dbService, aiMoveService);
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = mainViewModel,
             };
         }
 

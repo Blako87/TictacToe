@@ -10,7 +10,7 @@ namespace TicTacToeFancy.ViewModels;
 public partial class LeaderboardViewModel : ViewModelBase
 {
     private readonly DatabaseService _dbService;
-    private readonly MainWindowViewModel _mainVm;
+    private readonly IGameNavigator _navigator;
 
     [ObservableProperty]
     private ObservableCollection<PlayerStat> _stats = new();
@@ -18,10 +18,10 @@ public partial class LeaderboardViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isLoading;
 
-    public LeaderboardViewModel(DatabaseService dbService, MainWindowViewModel mainVm)
+    public LeaderboardViewModel(DatabaseService dbService, IGameNavigator navigator)
     {
         _dbService = dbService;
-        _mainVm = mainVm;
+        _navigator = navigator;
     }
 
     /// <summary>
@@ -56,6 +56,6 @@ public partial class LeaderboardViewModel : ViewModelBase
     [RelayCommand]
     private void Back()
     {
-        _mainVm.ReturnToGame();
+        _navigator.ReturnToGame();
     }
 }
