@@ -16,6 +16,14 @@ sealed class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .WithInterFont()
+            .With(new Win32PlatformOptions
+            {
+                RenderingMode = new[] { Win32RenderingMode.Vulkan, Win32RenderingMode.Wgl, Win32RenderingMode.Software }
+            })
+           .With(new SkiaOptions
+           {
+               MaxGpuResourceSizeBytes = 1024 * 1024 * 1024, // 1 GB
+               
+           })
             .LogToTrace();
 }
