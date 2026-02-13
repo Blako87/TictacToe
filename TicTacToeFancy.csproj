@@ -6,6 +6,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	<ApplicationIcon>Assets\VSN.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
