@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using System.IO;
 
 namespace TicTacToeFancy.Services;
 
@@ -9,12 +10,12 @@ public record PlayerStat(string Name, int Wins, int Losses, int Draws, DateTime 
 
 public class DatabaseService
 {
-    private const string DbName = "game_stats.db";
-    private readonly string _connectionString;
+
+    private string _connectionString = string.Empty;
 
     public DatabaseService()
     {
-        _connectionString = $"Data Source={DbName}";
+
         InitializeDatabase();
     }
 
@@ -22,6 +23,19 @@ public class DatabaseService
     {
         try
         {
+            // 1. Pfad zu %AppData% (Local) ermitteln
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string folderPath = Path.Combine(appDataPath, "TictacToefancy");
+
+            // 2. Ordner erstellen, falls er nicht existiert
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string dbPath = Path.Combine(folderPath, "game_stats.db");
+            _connectionString = $"Data Source={dbPath}";
+
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
