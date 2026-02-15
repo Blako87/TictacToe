@@ -26,7 +26,8 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
             var dbService = new DatabaseService();
             var aiMoveService = new MinimaxAiService();
-            var mainViewModel = new MainWindowViewModel(dbService, aiMoveService);
+            var kiNemotron = new KiNemotron();
+            var mainViewModel = new MainWindowViewModel(dbService, aiMoveService, kiNemotron);
             desktop.MainWindow = new MainWindow
             {
                 DataContext = mainViewModel,

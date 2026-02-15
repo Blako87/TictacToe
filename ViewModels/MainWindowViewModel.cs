@@ -16,6 +16,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable, IGameNavi
     private const string AIPlayer = "O";
 
     private readonly MinimaxAiService _aiMoveService;
+    private readonly KiNemotron _kiNemotron;
     private readonly DispatcherTimer _particleTimer;
     private double _particleTime;
     private const double ParticleFieldWidth = 980;
@@ -85,10 +86,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable, IGameNavi
     public bool IsNormalSelected => SelectedDifficulty == AiDifficulty.Normal;
     public bool IsHardSelected => SelectedDifficulty == AiDifficulty.Hard;
 
-    public MainWindowViewModel(DatabaseService dbService, MinimaxAiService aiMoveService, bool startAnimations = true)
+    public MainWindowViewModel(DatabaseService dbService, MinimaxAiService aiMoveService, KiNemotron kiNemotron, bool startAnimations = true)
     {
         _dbService = dbService;
         _aiMoveService = aiMoveService;
+        _kiNemotron = kiNemotron;
         LeaderboardVm = new LeaderboardViewModel(_dbService, this);
         _currentView = this; // Default to game view (self, or we can separate GameViewModel if we want, but keeping it simple for now)
 
@@ -243,8 +245,24 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable, IGameNavi
         await Task.Delay(280);
 
         var boardSnapshot = CreateBoardSnapshot();
-        int bestMove = await Task.Run(() =>
-            _aiMoveService.FindBestMove(boardSnapshot, AIPlayer, HumanPlayer, SelectedDifficulty));
+        int bestMove = await Task.Run(async () =>
+        {
+            // Convert the board array to a string representation for the AI
+            string boardString = ConvertBoardToString(boardSnapshot);
+            var aiResponse = await _kiNemotron.GetAiResponseAsync(boardString);
+            // Parse the AI response to get the best move index
+            // Assuming the AI response contains the index as an integer
+            if (int.TryParse(aiResponse, out int move))
+            {
+                return move;
+            }
+            else
+            {
+                // Fallback to minimax if AI response is invalid
+                return _aiMoveService.FindBestMove(boardSnapshot, AIPlayer, HumanPlayer, SelectedDifficulty);
+            }
+        });
+
 
         if (bestMove >= 0 && IsGameActive && string.IsNullOrEmpty(Cells[bestMove].Value))
         {
@@ -257,6 +275,18 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable, IGameNavi
         }
 
         IsAIThinking = false;
+    }
+
+    private string ConvertBoardToString(string[] board)
+    {
+        // Convert X/O/empty to 1/2/0 format for the AI
+        var converted = new string[9];
+        for (int i = 0; i < board.Length; i++)
+        {
+            converted[i] = board[i] == "X" ? "1" : board[i] == "O" ? "2" : "0";
+        }
+        // Format as [row1], [row2], [row3]
+        return $"[{converted[0]}, {converted[1]}, {converted[2]}]\n[{converted[3]}, {converted[4]}, {converted[5]}]\n[{converted[6]}, {converted[7]}, {converted[8]}]";
     }
 
     private static async Task ApplyMoveAsync(GameCell cell, string player)
