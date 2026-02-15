@@ -7,6 +7,24 @@
              x:DataType="vm:MainWindowViewModel">
 
   <UserControl.Styles>
+    <!-- ==================== SPINNER ==================== -->
+    <Style Selector="Ellipse.spinner">
+      <Setter Property="RenderTransformOrigin" Value="50%,50%"/>
+      <Setter Property="RenderTransform">
+        <RotateTransform/>
+      </Setter>
+      <Style.Animations>
+        <Animation Duration="0:0:1" IterationCount="INFINITE">
+          <KeyFrame Cue="0%">
+            <Setter Property="(RotateTransform.Angle)" Value="0"/>
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="(RotateTransform.Angle)" Value="360"/>
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+
     <!-- ==================== TITLE ==================== -->
     <Style Selector="TextBlock.title-main">
       <Setter Property="FontSize" Value="52"/>
@@ -192,6 +210,7 @@
          <Setter Property="BorderBrush" Value="#00F0FF"/>
          <Setter Property="Background" Value="#20FFFFFF"/>
      </Style>
+
   </UserControl.Styles>
 
   <Grid Margin="16">
@@ -289,7 +308,17 @@
             </Ellipse>
           </Grid>
 
-          <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="2" Foreground="#E0E5FF"/>
+			<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+				<TextBlock Text="{Binding StatusMessage}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" LetterSpacing="2" Foreground="#E0E5FF"/>
+				<Ellipse x:Name="Spinner"
+						 Classes="spinner"
+						 Width="18"
+						 Height="18"
+						 Stroke="#00F0FF"
+						 StrokeThickness="2"
+						 StrokeDashArray="2,3"
+						 IsVisible="{Binding IsAIThinking}"/>
+			</StackPanel>
 
           <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
              <Button Classes="diff-btn diff-easy" Classes.active="{Binding IsEasySelected}" Command="{Binding SelectEasyDifficultyCommand}" Content="EASY" IsEnabled="{Binding IsVsAI}"/>
